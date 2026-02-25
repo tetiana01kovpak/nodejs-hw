@@ -1,38 +1,42 @@
+//Imports
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import pinoHttp from 'pino-http';
-
-const PORT = process.env.PORT || 3000;
+import { logger } from './middleware/logger.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import notesRouters from './routes/notesRoutes.js';
+import { connectMongoDB } from './db/connectMongoDB.js';
 
 const app = express();
+const PORT = process.env.PORT ?? 3000;
 
-app.use(cors());
+//MIddleware - Pino(pretty) logging
+app.use(logger);
+
+//Middleware - JSON parsing
 app.use(express.json());
-app.use(pinoHttp({ transport: { target: 'pino-pretty' } }));
 
-app.get('/notes', (req, res) => {
-  res.status(200).json({ message: 'Retrieved all notes' });
-});
+//Middleware - CORS
+app.use(cors());
 
-app.get('/notes/:noteId', (req, res) => {
-  res
-    .status(200)
-    .json({ message: `Retrieved note with ID: ${req.params.noteId}` });
-});
+//Routes - Notes
+app.use(notesRouters);
 
-app.get('/test-error', () => {
-  throw new Error('Simulated server error');
-});
+//Middleware - 404 - Route not found
+app.use(notFoundHandler);
 
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
+//Middleware - Error catching
+app.use(errorHandler);
 
-app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message });
-});
+//DB connection
+await connectMongoDB();
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+//Start server
+app.listen(PORT, (error) => {
+  if (error) {
+    console.log('Error:', error);
+  } else {
+    console.log(`Server is running on port ${PORT}`);
+  }
 });
