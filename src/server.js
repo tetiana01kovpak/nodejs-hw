@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { logger } from './middleware/logger.js';
+import { errors } from 'celebrate';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import notesRouters from './routes/notesRoutes.js';
@@ -25,6 +26,9 @@ app.use(notesRouters);
 
 //Middleware - 404 - Route not found
 app.use(notFoundHandler);
+
+//Middleware - Celebrate validation errors
+app.use(errors());
 
 //Middleware - Error catching
 app.use(errorHandler);
