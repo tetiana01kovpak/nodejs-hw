@@ -1,5 +1,5 @@
 {
-  "name": "03-validation",
+  "name": "04-auth",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -11,7 +11,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "celebrate": "^15.0.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
