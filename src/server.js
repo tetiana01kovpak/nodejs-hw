@@ -9,6 +9,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import authRouters from './routes/authRoutes.js';
 import notesRouters from './routes/notesRoutes.js';
+import userRouters from './routes/userRoutes.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
 
 const app = express();
@@ -31,6 +32,9 @@ app.use(authRouters);
 
 //Routes - Notes
 app.use(notesRouters);
+
+//Routes - Users
+app.use(userRouters);
 
 //Middleware - 404 - Route not found
 app.use(notFoundHandler);
